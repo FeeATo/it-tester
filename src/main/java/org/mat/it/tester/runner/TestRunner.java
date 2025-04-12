@@ -10,23 +10,34 @@ import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static org.mat.it.tester.model.TestCenario.CENARIOS_FOLDER;
+
 public class TestRunner {
 
     private static Gson gson = new Gson();
 
-    public static void runTests(List<Method> classToRunTests) {
+    public static void runTests(List<Class<?>> classToRunTests) {
         try {
-            for (Method method : classToRunTests) {
-                MethodToTest methodToTest = method.getAnnotation(MethodToTest.class);
+            for (Class classz : classToRunTests) {
+                Object instance = classz.getConstructor().newInstance();
 
-                File pastaCenarios = new File("target/classes/cenarios", methodToTest.pastaCenarios());
+                for (Method method : classz.getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(MethodToTest.class)) {
+                        Object methodParameter = gson.fromJson(new FileReader(buildInputFile(method.getAnnotation(MethodToTest.class))), method.getParameters()[0].getType());
+                        Object returnn = method.invoke(instance, methodParameter);
 
-                Object parameter = gson.fromJson(new FileReader(new File(pastaCenarios, TestCenario.INPUT_FILE)), method.getParameters()[0].getType());
-                System.out.println(parameter);
+                        System.out.println(returnn);
+                    }
+                }
+
             }
         } catch (Exception ex) {
             throw new TesterRuntimeException(ex);
         }
 
+    }
+
+    private static File buildInputFile(MethodToTest methodToTest) {
+        return new File(new File(CENARIOS_FOLDER, methodToTest.pastaCenarios()), TestCenario.INPUT_FILE);
     }
 }

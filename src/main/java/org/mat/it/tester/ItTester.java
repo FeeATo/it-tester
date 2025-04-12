@@ -1,25 +1,29 @@
 package org.mat.it.tester;
 
+import org.mat.it.tester.generator.ClassGenerator;
 import org.mat.it.tester.runner.TestRunner;
 import org.mat.it.tester.validator.ClassFinder;
-import org.mat.it.tester.validator.ClassSrvValidator;
+import org.mat.it.tester.validator.ClassToTestValidator;
+import org.mat.it.tester.validator.MockClassValidator;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ItTester {
     public static void runTests(Class<?> classe) {
 
         try {
             List<Class<?>> classList = listClassesInProject(classe);
-            List<Method> methodsToTest = classList.stream().map(ClassSrvValidator::getMethodsToTest).flatMap(Collection::stream).collect(Collectors.toList());
-            TestRunner.runTests(methodsToTest);
+            List<Class<?>> classesToValidate = classList.stream().map(ClassToTestValidator::validateClass).filter(Objects::nonNull).collect(Collectors.toList());
+            List<Class<?>> classesToMock = classList.stream().filter(classz->!classesToValidate.contains(classz))
+                    .map(MockClassValidator::validate)
+                    .map(ClassGenerator::generateMockClass)
+                    .collect(Collectors.toList());
+            TestRunner.runTests(classesToValidate);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

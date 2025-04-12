@@ -1,43 +1,35 @@
 package org.mat.it.tester.validator;
 
 import com.mat.shared.util.Utils;
-import org.mat.it.tester.anotations.ClasseSrv;
+import org.mat.it.tester.anotations.ClassToTest;
 import org.mat.it.tester.anotations.MethodToTest;
 import org.mat.it.tester.model.TestCenario;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClassSrvValidator {
+import static org.mat.it.tester.model.TestCenario.CENARIOS_FOLDER;
 
-    private static File cenariosFolder = new File("target/classes/cenarios");
+public class ClassToTestValidator {
 
-    static {
-        if (!cenariosFolder.exists()) {
-            throw new IllegalArgumentException("Pasta 'cenários' não encontrada");
-        }
-    }
-
-    public static List<Method> getMethodsToTest(Class<?> classz) throws IllegalArgumentException {
-        Annotation annotations = classz.getAnnotation(ClasseSrv.class);
-        List<Method> methodsToTest = new ArrayList<>();
+    public static Class<?> validateClass(Class<?> classz) throws IllegalArgumentException {
+        Annotation annotations = classz.getAnnotation(ClassToTest.class);
         if (annotations != null) {
-
             List<Method> classMethodsToTest = Arrays.stream(classz.getMethods())
                     .filter(method -> method.getAnnotation(MethodToTest.class) != null)
                     .collect(Collectors.toList());
             for (Method method : classMethodsToTest) {
                 validateMethod(classz, method);
             }
-            methodsToTest.addAll(classMethodsToTest);
-
+            if (!classMethodsToTest.isEmpty()) {
+                return classz;
+            }
         }
-        return methodsToTest;
+        return null;
     }
 
     private static void validateMethod(Class<?> classz, Method method) {
@@ -58,7 +50,7 @@ public class ClassSrvValidator {
                 throw new IllegalArgumentException("Método não pode retornar um tipo primitivo");
             }
 
-            File pastaCenarios = new File(cenariosFolder, methodToTest.pastaCenarios());
+            File pastaCenarios = new File(CENARIOS_FOLDER, methodToTest.pastaCenarios());
             if (!pastaCenarios.exists()) {
                 throw new IllegalArgumentException("Pasta de cenários '" + methodToTest.pastaCenarios() +"' não encontrada");
             }
@@ -71,20 +63,8 @@ public class ClassSrvValidator {
                 throw new IllegalArgumentException("Arquivo de saída do cenário '" + methodToTest.pastaCenarios() +"' não encontrado");
             }
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage() + " " + determinaMethodSignature(classz, method));
+            throw new IllegalArgumentException(e.getMessage() + " " + ValidatorUtils.determinaMethodSignature(classz, method));
         }
-    }
-
-    private static String determinaMethodSignature(Class<?> classz, Method method) {
-        StringBuilder signature = new StringBuilder();
-        signature.append("(")
-                .append(classz.getName())
-                .append(".")
-                .append(method.getName())
-                .append("(")
-                .append(Arrays.stream(method.getParameters()).map(par -> par.getType().getSimpleName() + " " + par.getName()).collect(Collectors.joining(", ")))
-                .append("))");
-        return signature.toString();
     }
 
 }
