@@ -3,20 +3,23 @@ package org.mat.it.tester.validator;
 import com.mat.shared.util.Utils;
 import org.mat.it.tester.anotations.ClassToTest;
 import org.mat.it.tester.anotations.MethodToTest;
-import org.mat.it.tester.model.TestCenario;
 
-import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.mat.it.tester.model.TestCenario.CENARIOS_FOLDER;
 
 public class ClassToTestValidator {
 
-    public static Class<?> validateClass(Class<?> classz) throws IllegalArgumentException {
+    /**
+     * @return Return null if class doesn't have @ClassToTest annotation
+     * **/
+    public static Map<Class<?>, List<Method>> validateClass(Class<?> classz) throws IllegalArgumentException {
+        Map<Class<?>, List<Method>> methodClassMap = new HashMap<>();
+
         Annotation annotations = classz.getAnnotation(ClassToTest.class);
         if (annotations != null) {
             List<Method> classMethodsToTest = Arrays.stream(classz.getMethods())
@@ -25,8 +28,9 @@ public class ClassToTestValidator {
             for (Method method : classMethodsToTest) {
                 validateMethod(classz, method);
             }
+            methodClassMap.put(classz, classMethodsToTest);
             if (!classMethodsToTest.isEmpty()) {
-                return classz;
+                return methodClassMap;
             }
         }
         return null;
@@ -50,18 +54,7 @@ public class ClassToTestValidator {
                 throw new IllegalArgumentException("Método não pode retornar um tipo primitivo");
             }
 
-            File pastaCenarios = new File(CENARIOS_FOLDER, methodToTest.pastaCenarios());
-            if (!pastaCenarios.exists()) {
-                throw new IllegalArgumentException("Pasta de cenários '" + methodToTest.pastaCenarios() +"' não encontrada");
-            }
-            File inputFile = new File(pastaCenarios, TestCenario.INPUT_FILE);
-            if (!inputFile.exists()) {
-                throw new IllegalArgumentException("Arquivo de entrada do cenário '" + methodToTest.pastaCenarios() +"' não encontrado");
-            }
-            File outputFile = new File(pastaCenarios, TestCenario.EXPECTED_OUTPUT_FILE);
-            if (!outputFile.exists()) {
-                throw new IllegalArgumentException("Arquivo de saída do cenário '" + methodToTest.pastaCenarios() +"' não encontrado");
-            }
+            CenariosAccess.accessCenarioDirectory(methodToTest.pastaCenarios());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage() + " " + ValidatorUtils.determinaMethodSignature(classz, method));
         }
