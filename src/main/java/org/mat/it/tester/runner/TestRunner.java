@@ -37,7 +37,9 @@ public class TestRunner {
                         Object methodParameter = gson.fromJson(new FileReader(caseFolder.getInput()), method.getParameters()[0].getType());
                         Object returnn = method.invoke(classToTestInstance, methodParameter);
 
-                        System.out.println(returnn);
+                        System.out.println("Cenário - " + caseFolder.getCaseName() + ": ");
+                        System.out.println(gson.toJson(returnn));
+                        System.out.println("================= \n");
                     }
 
                 }
