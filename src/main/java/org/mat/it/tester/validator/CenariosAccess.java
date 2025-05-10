@@ -10,6 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Estrutura da pasta de cenários:
+ *
+ * cenarios
+ *  \_ cenario (ex.: reservar)
+ *           \_ caso (ex.: 1)
+ *                 \_ mock
+ *                       \_ arquivosMock.json
+ *                 input.json
+ *                 output.json
+ *
+ * **/
 public class CenariosAccess {
 
     public static final String INPUT_FILE = "input.json";

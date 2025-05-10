@@ -1,39 +1,25 @@
 package org.mat.it.tester.validator;
 
 import com.mat.shared.util.Utils;
-import org.mat.it.tester.anotations.ClassToTest;
 import org.mat.it.tester.anotations.MethodToTest;
+import org.mat.it.tester.model.TestClasses;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClassToTestValidator {
 
-    /**
-     * @return Return null if class doesn't have @ClassToTest annotation
-     * **/
-    public static Map<Class<?>, List<Method>> validateClass(Class<?> classz) throws IllegalArgumentException {
-        Map<Class<?>, List<Method>> methodClassMap = new HashMap<>();
-
-        Annotation annotations = classz.getAnnotation(ClassToTest.class);
-        if (annotations != null) {
-            List<Method> classMethodsToTest = Arrays.stream(classz.getMethods())
-                    .filter(method -> method.getAnnotation(MethodToTest.class) != null)
-                    .collect(Collectors.toList());
-            for (Method method : classMethodsToTest) {
-                validateMethod(classz, method);
-            }
-            methodClassMap.put(classz, classMethodsToTest);
-            if (!classMethodsToTest.isEmpty()) {
-                return methodClassMap;
-            }
+    public static void validateClass(Class<?> classz, TestClasses testClasses) throws IllegalArgumentException {
+        List<Method> classMethodsToTest = Arrays.stream(classz.getMethods())
+                .filter(method -> method.getAnnotation(MethodToTest.class) != null)
+                .peek(method -> validateMethod(classz, method))
+                .collect(Collectors.toList());
+        if (!classMethodsToTest.isEmpty()) {
+            testClasses.addMethods(classz, classMethodsToTest);
         }
-        return null;
     }
 
     private static void validateMethod(Class<?> classz, Method method) {

@@ -1,17 +1,11 @@
 package org.mat.it.tester;
 
 import org.mat.it.tester.generator.ClassGenerator;
-import org.mat.it.tester.model.CaseFolder;
-import org.mat.it.tester.model.CenarioFolder;
-import org.mat.it.tester.model.MockFolder;
+import org.mat.it.tester.model.*;
 import org.mat.it.tester.runner.TestRunner;
-import org.mat.it.tester.validator.CenariosAccess;
 import org.mat.it.tester.validator.ClassFinder;
-import org.mat.it.tester.validator.ClassToTestValidator;
-import org.mat.it.tester.validator.MockClassValidator;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,30 +15,15 @@ public class ItTester {
 
         try {
             List<Class<?>> classList = listClassesInProject(classe);
-            Map<Class<?>, List<Method>> classToTest = new HashMap<>();
-            for (Class<?> classz : classList) {
-                Map<Class<?>, List<Method>> validatedClass = ClassToTestValidator.validateClass(classz);
-                if (validatedClass != null) {
-                    classToTest.putAll(validatedClass);
-                }
-            }
-
-            Map<Class<?>, List<Method>> classToMock = new HashMap<>();
-            for (Class<?> classz : classList) {
-                if (!classToTest.containsKey(classz)) {
-                    Map<Class<?>, List<Method>> validatedMockClass = MockClassValidator.validateClass(classz);
-                    if (validatedMockClass != null){
-                        classToMock.putAll(validatedMockClass);
-                    }
-                }
-            }
+            TestClasses testClasses = new TestClasses(classList);
+            MockClasses mockClasses = new MockClasses(classList);
 
 
-            List<Class<?>> mockInstances = classToMock.entrySet().stream()
-                    .map(entry->ClassGenerator.generateMockClass(entry.getKey(), entry.getValue()))
+            List<Class<?>> mockInstances = mockClasses.getInvolvedClasses().stream()
+                    .map(ic->ClassGenerator.generateMockClass(ic.getClassz(), ic.getMethods()))
                     .collect(Collectors.toList());
 
-            TestRunner.runTests(classToTest, mockInstances);
+            TestRunner.runTests(testClasses, mockInstances);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {

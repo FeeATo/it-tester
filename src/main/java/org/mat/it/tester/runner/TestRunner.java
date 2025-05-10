@@ -4,10 +4,11 @@ import com.google.gson.Gson;
 import org.mat.it.tester.exceptions.TesterRuntimeException;
 import org.mat.it.tester.model.CaseFolder;
 import org.mat.it.tester.model.CenarioFolder;
+import org.mat.it.tester.model.InvolvedClasses;
+import org.mat.it.tester.model.TestClasses;
 import org.mat.it.tester.validator.CenariosAccess;
 
 import java.io.FileReader;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,12 @@ public class TestRunner {
 
     private static Gson gson = new Gson();
 
-    public static void runTests(Map<Class<?>, List<Method>> classToTestMap, List<Class<?>> mockClasses) {
+    public static void runTests(TestClasses classToTestMap, List<Class<?>> mockClasses) {
         try {
-            for (Map.Entry<Class<?>, List<Method>> classToTestAndMethods : classToTestMap.entrySet()) {
+            for (InvolvedClasses.InvolvedClass testClass : classToTestMap.getInvolvedClasses()) {
 
-                Class<?> classToTest = classToTestAndMethods.getKey();
-
-                for (Method method : classToTestAndMethods.getValue()) {
+                Class<?> classToTest = testClass.getClassz();
+                for (Method method : testClass.getMethods()) {
                     CenarioFolder cenarioFolder = CenariosAccess.CENARIOS_FOLDERS.get(method.getName());
 
                     for (CaseFolder caseFolder : cenarioFolder.getCaseFolderList()) {

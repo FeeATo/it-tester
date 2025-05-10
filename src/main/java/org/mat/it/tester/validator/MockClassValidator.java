@@ -3,8 +3,8 @@ package org.mat.it.tester.validator;
 import org.mat.it.tester.anotations.MockedReturn;
 import org.mat.it.tester.model.CaseFolder;
 import org.mat.it.tester.model.CenarioFolder;
+import org.mat.it.tester.model.MockClasses;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,17 +17,14 @@ public class MockClassValidator {
 
     public static final String MOCK_FOLDER = "mock";
 
-    public static Map<Class<?>, List<Method>> validateClass(Class<?> classz) {
-        Map<Class<?>, List<Method>> classToMock = new HashMap<>();
+    public static void validateClass(Class<?> classz, MockClasses mockClasses) {
         List<Method> methodWithMockedResult = Arrays.stream(classz.getMethods())
                 .filter(method -> method.getAnnotation(MockedReturn.class) != null)
                 .peek(method -> validateMethod(classz, method))
                 .collect(Collectors.toList());
-        classToMock.put(classz, methodWithMockedResult);
         if (!methodWithMockedResult.isEmpty()) {
-            return classToMock;
+            mockClasses.addMethods(classz, methodWithMockedResult);
         }
-        return null;
     }
 
     private static void validateMethod(Class<?> clazzs, Method method) {
