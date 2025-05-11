@@ -30,13 +30,7 @@ public class ClassGenerator {
                 .addClass(generateClass(classz, methods))
                 .addImport(Gson.class, java.nio.file.Files.class)
                 .addImport("java.io.*");
-//
-//
-        Class<?> mockClass = loadMockClass(unitSourceGenerator);
-
-//        Map<Class<?>, Class<?>> classAndMockClass = new HashMap<>();
-//        classAndMockClass.put(classz, mockClass);
-        return mockClass;
+        return loadMockClass(unitSourceGenerator);
     }
 
     private static ClassSourceGenerator generateClass(Class<?> classz, List<Method> methods) {

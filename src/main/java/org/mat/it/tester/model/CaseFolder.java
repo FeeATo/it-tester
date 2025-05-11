@@ -4,7 +4,7 @@ import java.io.File;
 
 import static org.mat.it.tester.validator.CenariosAccess.INPUT_FILE;
 import static org.mat.it.tester.validator.CenariosAccess.OUTPUT_FILE;
-import static org.mat.it.tester.validator.MockClassValidator.MOCK_FOLDER;
+import static org.mat.it.tester.validator.CenariosAccess.MOCK_FOLDER;
 
 public class CaseFolder {
     

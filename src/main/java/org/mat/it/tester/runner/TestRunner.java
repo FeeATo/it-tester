@@ -41,12 +41,10 @@ public class TestRunner {
                         System.out.println(gson.toJson(returnn));
                         System.out.println("================= \n");
                     }
-
                 }
             }
         } catch (Exception ex) {
             throw new TesterRuntimeException(ex);
         }
-
     }
 }

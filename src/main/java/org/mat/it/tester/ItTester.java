@@ -6,6 +6,7 @@ import org.mat.it.tester.runner.TestRunner;
 import org.mat.it.tester.validator.ClassFinder;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,19 +17,14 @@ public class ItTester {
         try {
             List<Class<?>> classList = listClassesInProject(classe);
             TestClasses testClasses = new TestClasses(classList);
-            MockClasses mockClasses = new MockClasses(classList);
+            ToBeMockedClasses toBeMockedClasses = new ToBeMockedClasses(classList);
 
-
-            List<Class<?>> mockInstances = mockClasses.getInvolvedClasses().stream()
+            List<Class<?>> mockInstances = toBeMockedClasses.getInvolvedClasses().stream()
                     .map(ic->ClassGenerator.generateMockClass(ic.getClassz(), ic.getMethods()))
                     .collect(Collectors.toList());
 
             TestRunner.runTests(testClasses, mockInstances);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (MalformedURLException | ClassNotFoundException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
 
@@ -40,14 +36,16 @@ public class ItTester {
         File[] classes = ClassFinder.findClasses(parentFile);
         File rootDir = new File("target/classes");
 
-        URLClassLoader loader = new URLClassLoader(new URL[]{rootDir.toURI().toURL()});
-
-        List<Class<?>> classList = new ArrayList<>();
-        for (File classz : classes) {
-            String classname = rootDir.toURI().relativize(classz.toURI()).getPath().replace("/", ".").replace(".class", "");
-            classList.add(loader.loadClass(classname));
+        try (URLClassLoader loader = new URLClassLoader(new URL[]{rootDir.toURI().toURL()})) {
+            List<Class<?>> classList = new ArrayList<>();
+            for (File classz : classes) {
+                String classname = rootDir.toURI().relativize(classz.toURI()).getPath().replace("/", ".").replace(".class", "");
+                classList.add(loader.loadClass(classname));
+            }
+            return classList;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return classList;
     }
 }
 

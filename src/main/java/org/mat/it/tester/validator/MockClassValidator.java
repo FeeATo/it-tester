@@ -3,11 +3,10 @@ package org.mat.it.tester.validator;
 import org.mat.it.tester.anotations.MockedReturn;
 import org.mat.it.tester.model.CaseFolder;
 import org.mat.it.tester.model.CenarioFolder;
-import org.mat.it.tester.model.MockClasses;
+import org.mat.it.tester.model.ToBeMockedClasses;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,15 +14,13 @@ import java.util.stream.Collectors;
 
 public class MockClassValidator {
 
-    public static final String MOCK_FOLDER = "mock";
-
-    public static void validateClass(Class<?> classz, MockClasses mockClasses) {
+    public static void validateClass(Class<?> classz, ToBeMockedClasses toBeMockedClasses) {
         List<Method> methodWithMockedResult = Arrays.stream(classz.getMethods())
                 .filter(method -> method.getAnnotation(MockedReturn.class) != null)
                 .peek(method -> validateMethod(classz, method))
                 .collect(Collectors.toList());
         if (!methodWithMockedResult.isEmpty()) {
-            mockClasses.addMethods(classz, methodWithMockedResult);
+            toBeMockedClasses.addMethods(classz, methodWithMockedResult);
         }
     }
 

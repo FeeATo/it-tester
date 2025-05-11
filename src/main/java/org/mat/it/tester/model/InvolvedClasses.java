@@ -9,9 +9,12 @@ import java.util.*;
  * **/
 public class InvolvedClasses {
 
+    protected InvolvedClasses() {
+    }
+
     private final Set<InvolvedClass> involvedClasses = new HashSet<>();
 
-    public void addTestingClass(Class<?> classz) {
+    protected void addTestingClass(Class<?> classz) {
         involvedClasses.add(new InvolvedClass(classz));
     }
 
@@ -35,7 +38,7 @@ public class InvolvedClasses {
         private Class<?> classz;
         private List<Method> methods;
 
-        public InvolvedClass(Class<?> classz) {
+        protected InvolvedClass(Class<?> classz) {
             this.classz = classz;
         }
 
