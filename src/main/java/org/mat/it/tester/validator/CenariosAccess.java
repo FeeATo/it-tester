@@ -52,20 +52,4 @@ public class CenariosAccess {
         Optional.ofNullable(CENARIOS_FOLDERS.get(directory))
                 .orElseThrow(()->new IllegalArgumentException("Pasta de cenários '" + directory + "' não encontrada"));
     }
-
-    public static File accessCaseFolder(File cenariosFolder, String cenarioDirectory) {
-        File fileCenario = new File(cenariosFolder, cenarioDirectory);
-        if (!fileCenario.exists()) {
-            throw new IllegalArgumentException("Pasta do cenário '" + cenarioDirectory + "' não existe");
-        }
-        return fileCenario;
-    }
-
-    public CaseFolder getCaseFolder() {
-        return caseFolder;
-    }
-
-    public void setCaseFolder(CaseFolder caseFolder) {
-        this.caseFolder = caseFolder;
-    }
 }

@@ -29,8 +29,8 @@ public class TestRunner {
 
                     for (CaseFolder caseFolder : cenarioFolder.getCaseFolderList()) {
 
-                        Class<?> mockCLass = mockClasses.get(0);
-                        Object mockObject = Constructors.newInstanceOf(mockCLass, caseFolder);
+                        Class<?> mockClass = mockClasses.get(0);
+                        Object mockObject = Constructors.newInstanceOf(mockClass, caseFolder);
 
                         Object classToTestInstance = Constructors.newInstanceOf(classToTest, mockObject);
 

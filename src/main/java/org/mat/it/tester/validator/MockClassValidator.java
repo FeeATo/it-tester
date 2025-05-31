@@ -30,15 +30,6 @@ public class MockClassValidator {
             if (mockedReturn.file() == null || mockedReturn.file().isEmpty()) {
                 throw new IllegalArgumentException("Método sem arquivo com resultado mockado");
             }
-
-            Map<String, CenarioFolder> cenariosFolders = CenariosAccess.CENARIOS_FOLDERS;
-            for (CenarioFolder cenarioFolder : cenariosFolders.values()) {
-                for (CaseFolder caseFolder : cenarioFolder.getCaseFolderList()) {
-                    if (caseFolder.getMockFolder().getMockResults().get(mockedReturn.file()) == null) {
-                        throw new IllegalArgumentException("Arquivo de mock fornecido não existe");
-                    }
-                }
-            }
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException(ex.getMessage() + " " + ValidatorUtils.determinaMethodSignature(clazzs, method));
         }
