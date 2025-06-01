@@ -1,10 +1,10 @@
-package org.mat.it.tester.model;
+package org.mat.it.tester.testRunner.model;
 
 import java.io.File;
 
-import static org.mat.it.tester.validator.CenariosAccess.INPUT_FILE;
-import static org.mat.it.tester.validator.CenariosAccess.OUTPUT_FILE;
-import static org.mat.it.tester.validator.CenariosAccess.MOCK_FOLDER;
+import static org.mat.it.tester.testRunner.validator.CenariosAccess.INPUT_FILE;
+import static org.mat.it.tester.testRunner.validator.CenariosAccess.OUTPUT_FILE;
+import static org.mat.it.tester.testRunner.validator.CenariosAccess.MOCK_FOLDER;
 
 public class CaseFolder {
     

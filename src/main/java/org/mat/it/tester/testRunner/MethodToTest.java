@@ -1,4 +1,4 @@
-package org.mat.it.tester.anotations;
+package org.mat.it.tester.testRunner.anotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

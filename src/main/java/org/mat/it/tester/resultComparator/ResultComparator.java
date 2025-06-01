@@ -1,4 +1,4 @@
-package org.mat.it.tester;
+package org.mat.it.tester.resultComparator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,20 +21,36 @@ public class ResultComparator {
         }
     }
 
-    private static void compareObjects(Object obj1, Object obj2, Map<String, Object> classeAtual) throws IllegalAccessException, InvocationTargetException {
-        Map<String, Object> camposClasse = new  HashMap<>();
-        classeAtual.put(obj1.getClass().getName(), camposClasse);
-        Map<String, Method> methods1Map = Arrays.stream(obj1.getClass().getMethods()).filter(m -> m.getName().startsWith("get")).collect(Collectors.toMap(Method::getName, method -> method));
-        Method[] methods2 = obj2.getClass().getMethods();
-        for (Method method2 : Arrays.stream(methods2).filter(m -> m.getName().startsWith("get") && isNotNativeMethod(m)).collect(Collectors.toList())) {
-            Method method1 = methods1Map.get(method2.getName());
+    private static void compareObjects(Object obj1, Object obj2, Map<String, Object> classeAtual) throws InvocationTargetException {
+        try {
+            Map<String, Object> camposClasse = new HashMap<>();
+            classeAtual.put(obj1.getClass().getName(), camposClasse);
+            Map<String, Method> methods1Map = Arrays.stream(obj1.getClass().getMethods())
+                    .filter(m -> m.getName().startsWith("get"))
+                    .collect(Collectors.toMap(m->m.getReturnType()+m.getName()+m.getParameterCount(), method -> method));
+            Method[] methods2 = obj2.getClass().getMethods();
+            for (Method method2 : Arrays.stream(methods2).collect(Collectors.toList())) {
+                if (method2.getName().startsWith("get") && isNotNativeMethod(method2)) {
+                    if (method2.getParameterCount() > 0) {
+                        System.out.println("Method '" + getMethodSignature(method2) + "' from " + obj1.getClass().getSimpleName() + " (object " + obj2 +") was ignored because it has parameters.");
+                    } else {
+                        Method method1 = methods1Map.get(method2.getReturnType()+method2.getName()+method2.getParameterCount());
 
-            Object field1Obj = method1.invoke(obj1, null);
-            Object field2Obj = method2.invoke(obj2, null);
+                        Object field1Obj = method1.invoke(obj1, null);
+                        Object field2Obj = method2.invoke(obj2, null);
 
+                        compareFields(field1Obj, field2Obj, camposClasse, method1.getName().replace("get", ""));
+                    }
 
-            compareFields(field1Obj, field2Obj, camposClasse, method1.getName().replace("get",""));
+                }
+            }
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    private static Object getMethodSignature(Method method) {
+        return method.getReturnType().getSimpleName() + " " + method.getName() + "(" + Arrays.stream(method.getParameterTypes()).map(Class::getName).collect(Collectors.joining(", ")) + ")";
     }
 
     private static void compareIterables(Iterable<?> obj1, Iterable<?> obj2, Map<String, Object> classeAtual) throws InvocationTargetException, IllegalAccessException {
@@ -56,7 +72,6 @@ public class ResultComparator {
     private static void compareFields(Object obj1, Object obj2, Map<String, Object> classeCampos, String fieldIdentifier) throws InvocationTargetException, IllegalAccessException {
         if (obj1 == null && obj2 == null) {
             classeCampos.put(fieldIdentifier, "OK");
-            System.out.println(fieldIdentifier + " OK");
         } else if (obj1 != null && obj2 != null) {
             if (obj1.getClass().equals(obj2.getClass())) {
 
@@ -64,10 +79,8 @@ public class ResultComparator {
                     boolean saoIguais = obj1.equals(obj2);
                     if (saoIguais) {
                         classeCampos.put(fieldIdentifier, "OK");
-                        System.out.println(fieldIdentifier + " OK");
                     } else {
                         classeCampos.put(fieldIdentifier, assembleDifferenceMessage(obj1, obj2));
-                        System.out.println(fieldIdentifier + " " + assembleDifferenceMessage(obj1, obj2));
                     }
                 } else {
                     Map<String, Object> campoNovaClasse = new HashMap<>();
@@ -79,7 +92,6 @@ public class ResultComparator {
             }
         } else {
             classeCampos.put(fieldIdentifier, assembleDifferenceMessage(obj1, obj2));
-            System.out.println(fieldIdentifier + " " + assembleDifferenceMessage(obj1, obj2));
         }
     }
 

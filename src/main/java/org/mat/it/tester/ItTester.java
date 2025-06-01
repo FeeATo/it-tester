@@ -1,9 +1,9 @@
 package org.mat.it.tester;
 
-import org.mat.it.tester.generator.ClassGenerator;
-import org.mat.it.tester.model.*;
-import org.mat.it.tester.runner.TestRunner;
-import org.mat.it.tester.validator.ClassFinder;
+import org.mat.it.tester.testRunner.generator.ClassGenerator;
+import org.mat.it.tester.testRunner.model.*;
+import org.mat.it.tester.testRunner.runner.TestRunner;
+import org.mat.it.tester.testRunner.validator.ClassFinder;
 
 import java.io.File;
 import java.io.IOException;

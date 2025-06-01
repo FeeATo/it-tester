@@ -1,4 +1,4 @@
-package org.mat.it.tester.model;
+package org.mat.it.tester.testRunner.model;
 
 import java.io.File;
 import java.util.HashMap;

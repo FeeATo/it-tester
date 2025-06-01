@@ -1,29 +1,20 @@
-package org.mat.it.tester.generator;
+package org.mat.it.tester.testRunner.generator;
 
 import com.google.gson.Gson;
-import org.burningwave.core.Virtual;
 import org.burningwave.core.assembler.ComponentContainer;
 import org.burningwave.core.assembler.ComponentSupplier;
 import org.burningwave.core.classes.*;
-import org.mat.it.tester.anotations.MockedReturn;
-import org.mat.it.tester.model.CaseFolder;
-import org.mat.it.tester.validator.CenariosAccess;
+import org.mat.it.tester.testRunner.anotations.MockedReturn;
+import org.mat.it.tester.testRunner.model.CaseFolder;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.burningwave.core.assembler.StaticComponentContainer.Constructors;
-
 public class ClassGenerator {
-    private final static String PACKAGE_NAME = "org.mat.it.tester.dynamicgeneration";
+    private final static String PACKAGE_NAME = "org.mat.it.tester.testRunner.dynamicgeneration";
 
     public static Class<?> generateMockClass(Class<?> classz, List<Method> methods) {
         UnitSourceGenerator unitSourceGenerator = UnitSourceGenerator.create(PACKAGE_NAME)

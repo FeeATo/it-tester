@@ -1,11 +1,9 @@
-package org.mat.it.tester.validator;
+package org.mat.it.tester.testRunner.validator;
 
-import org.mat.it.tester.model.CaseFolder;
-import org.mat.it.tester.model.CenarioFolder;
-import org.mat.it.tester.model.MockFolder;
+import org.mat.it.tester.testRunner.model.CaseFolder;
+import org.mat.it.tester.testRunner.model.CenarioFolder;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

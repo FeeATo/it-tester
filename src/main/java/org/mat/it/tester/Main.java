@@ -2,12 +2,13 @@ package org.mat.it.tester;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.mat.it.tester.generator.ClassGenerator;
+import org.mat.it.tester.resultComparator.ResultComparator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Main {
 
@@ -100,13 +101,23 @@ public class Main {
             this.numeros = numeros;
         }
 
+        public Integer getIdade(String parametro1) {
+            return idade;
+        }
+
         public Integer getIdade() {
             return idade;
+        }
+
+        public String getIdadeString() {
+            return Optional.ofNullable(idade).map(Object::toString).orElse("null");
         }
 
         public void setIdade(Integer idade) {
             this.idade = idade;
         }
+
+
     }
 
 }

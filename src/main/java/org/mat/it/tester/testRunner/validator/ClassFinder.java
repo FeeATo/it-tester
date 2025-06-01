@@ -1,8 +1,7 @@
-package org.mat.it.tester.validator;
+package org.mat.it.tester.testRunner.validator;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ClassFinder {

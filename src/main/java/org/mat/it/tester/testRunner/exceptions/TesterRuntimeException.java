@@ -1,4 +1,4 @@
-package org.mat.it.tester.exceptions;
+package org.mat.it.tester.testRunner.exceptions;
 
 public class TesterRuntimeException extends RuntimeException{
     public TesterRuntimeException(Throwable cause) {

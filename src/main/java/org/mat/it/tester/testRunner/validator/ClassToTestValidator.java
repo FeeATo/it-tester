@@ -1,10 +1,9 @@
-package org.mat.it.tester.validator;
+package org.mat.it.tester.testRunner.validator;
 
 import com.mat.shared.util.Utils;
-import org.mat.it.tester.anotations.MethodToTest;
-import org.mat.it.tester.model.TestClasses;
+import org.mat.it.tester.testRunner.anotations.MethodToTest;
+import org.mat.it.tester.testRunner.model.TestClasses;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;

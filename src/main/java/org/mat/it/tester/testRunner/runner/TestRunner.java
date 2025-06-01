@@ -1,17 +1,16 @@
-package org.mat.it.tester.runner;
+package org.mat.it.tester.testRunner.runner;
 
 import com.google.gson.Gson;
-import org.mat.it.tester.exceptions.TesterRuntimeException;
-import org.mat.it.tester.model.CaseFolder;
-import org.mat.it.tester.model.CenarioFolder;
-import org.mat.it.tester.model.InvolvedClasses;
-import org.mat.it.tester.model.TestClasses;
-import org.mat.it.tester.validator.CenariosAccess;
+import org.mat.it.tester.testRunner.exceptions.TesterRuntimeException;
+import org.mat.it.tester.testRunner.model.CaseFolder;
+import org.mat.it.tester.testRunner.model.CenarioFolder;
+import org.mat.it.tester.testRunner.model.InvolvedClasses;
+import org.mat.it.tester.testRunner.model.TestClasses;
+import org.mat.it.tester.testRunner.validator.CenariosAccess;
 
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 import static org.burningwave.core.assembler.StaticComponentContainer.Constructors;
 

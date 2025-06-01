@@ -1,14 +1,11 @@
-package org.mat.it.tester.validator;
+package org.mat.it.tester.testRunner.validator;
 
-import org.mat.it.tester.anotations.MockedReturn;
-import org.mat.it.tester.model.CaseFolder;
-import org.mat.it.tester.model.CenarioFolder;
-import org.mat.it.tester.model.ToBeMockedClasses;
+import org.mat.it.tester.testRunner.anotations.MockedReturn;
+import org.mat.it.tester.testRunner.model.ToBeMockedClasses;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 

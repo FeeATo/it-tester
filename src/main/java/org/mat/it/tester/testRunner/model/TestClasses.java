@@ -1,6 +1,6 @@
-package org.mat.it.tester.model;
+package org.mat.it.tester.testRunner.model;
 
-import org.mat.it.tester.validator.ClassToTestValidator;
+import org.mat.it.tester.testRunner.validator.ClassToTestValidator;
 
 import java.util.List;
 

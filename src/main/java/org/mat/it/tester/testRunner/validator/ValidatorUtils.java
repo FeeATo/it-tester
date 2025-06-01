@@ -1,4 +1,4 @@
-package org.mat.it.tester.validator;
+package org.mat.it.tester.testRunner.validator;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
